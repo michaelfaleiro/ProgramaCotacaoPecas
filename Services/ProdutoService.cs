@@ -55,7 +55,7 @@ public class ProdutoService
 
         var result = await _mongoCollection.UpdateOneAsync(filter, update);
         if (result.MatchedCount == 0)
-            throw new InvalidOperationException($"Produto com Id {produtoId} não encontrado.");
+            throw new InvalidOperationException($"Produto não encontrado.");
     }
 
     public async Task Delete(string id)
