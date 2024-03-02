@@ -47,8 +47,8 @@ Contribuições são bem-vindas! Sinta-se à vontade para abrir issues para repo
 
 ## Contato
 Para mais informações, entre em contato:
-- [Email](mailto:seuemail@example.com)
-- [LinkedIn](https://www.linkedin.com/in/seuperfil/)
+- [Email](mailto:michaelfaleiro@gmail.com)
+- [LinkedIn](https://www.linkedin.com/in/michaelfaleiro/)
 
 ---
 
