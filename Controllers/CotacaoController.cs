@@ -82,6 +82,10 @@ public class CotacaoController : ControllerBase
 
             return Ok();
         }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
         catch (MongoWriteException)
         {
             return StatusCode(500, "Erro ao Buscar Dados!");
@@ -97,14 +101,13 @@ public class CotacaoController : ControllerBase
     {
         try
         {
-            var result = await _cotacaoService.GetById(id);
-
-            if (result == null)
-                return BadRequest("Cotação não encontrada");
-
             var cotacao = await _cotacaoService.Update(id, model);
 
             return Ok(cotacao);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
         }
         catch (MongoWriteException)
         {
@@ -125,6 +128,10 @@ public class CotacaoController : ControllerBase
 
             return Ok();
         }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
         catch (MongoWriteException)
         {
             return StatusCode(500, "Erro ao Remover Dados!");
@@ -140,14 +147,13 @@ public class CotacaoController : ControllerBase
     {
         try
         {
-            var result = await _cotacaoService.GetById(id);
-
-            if (result == null)
-                return BadRequest("Cotação não encontrada");
-
             await _cotacaoService.Delete(id);
 
             return NoContent();
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
         }
         catch (MongoWriteException)
         {

@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
@@ -11,7 +12,10 @@ public class Cotacao
     [BsonRepresentation(BsonType.ObjectId)]
     public string? Id { get; set; }
 
+    [Required(ErrorMessage = "Informe o Carro")]
     public string Carro { get; set; } = null!;
+
+    [MaxLength(17, ErrorMessage = "Máximo 17 caracteres")]
     public string Chassi { get; set; } = null!;
 
     [BsonElement("produtos")]

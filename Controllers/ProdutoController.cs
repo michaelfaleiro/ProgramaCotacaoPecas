@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using ProgramaCotacaoPecas.Models;
 using ProgramaCotacaoPecas.Services;
-using ProgramaCotacaoPecas.ViewsModels;
+
 
 namespace ProgramaCotacaoPecas.Controllers;
 
@@ -65,7 +65,7 @@ public class ProdutoController : ControllerBase
         }
         catch (MongoWriteException)
         {
-            return StatusCode(500, "Erro ao Buscar Dados!");
+            return StatusCode(500, "Erro ao Salvar Dados!");
         }
         catch
         {
@@ -73,7 +73,7 @@ public class ProdutoController : ControllerBase
         }
     }
 
-    [HttpPost("addpreco/{produtoId}")]
+    [HttpPost("{produtoId:length(24)}/addpreco")]
     public async Task<IActionResult> AddPrecoProduto([FromBody] Preco model, string produtoId)
     {
         try
@@ -81,6 +81,10 @@ public class ProdutoController : ControllerBase
             await _produtoService.AddPrecoProduto(produtoId, model);
 
             return Ok();
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
         }
         catch (MongoWriteException)
         {
@@ -98,14 +102,13 @@ public class ProdutoController : ControllerBase
     {
         try
         {
-            var result = await _produtoService.GetById(id);
-
-            if (result == null)
-                return BadRequest("Produto não encontrado");
-
             var produto = await _produtoService.Update(id, model);
 
             return Ok(produto);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
         }
         catch (MongoWriteException)
         {
@@ -127,9 +130,13 @@ public class ProdutoController : ControllerBase
             if (result == null)
                 return BadRequest("Produto não encontrado");
 
-            await _produtoService.DeleteCotacao(id);
+            await _produtoService.Delete(id);
 
             return NoContent();
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
         }
         catch (MongoWriteException)
         {

@@ -1,8 +1,8 @@
 using Microsoft.Extensions.Options;
-using MongoDB.Bson;
 using MongoDB.Driver;
 using ProgramaCotacaoPecas.Data;
 using ProgramaCotacaoPecas.Models;
+using ProgramaCotacaoPecas.ViewsModels;
 
 namespace ProgramaCotacaoPecas.Services;
 
@@ -33,40 +33,49 @@ public class CotacaoService
         return await _mongoCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
     }
 
-    public async Task<Cotacao> Update(string id, Cotacao cotacao)
+    public async Task<Cotacao> Update(string cotacaoId, Cotacao cotacao)
     {
-        var filter = Builders<Cotacao>.Filter.Eq("Id", id);
+        var filter = Builders<Cotacao>.Filter.Eq(x => x.Id, cotacaoId);
 
         var update = Builders<Cotacao>.Update
             .Set(x => x.Carro, cotacao.Carro)
-            .Set(x => x.Chassi, cotacao.Chassi);
+            .Set(x => x.Chassi, cotacao.Chassi)
+            .Set(x => x.UpdatedAt, DateTime.UtcNow);
 
-        await _mongoCollection.UpdateOneAsync(filter, update);
+        var result = await _mongoCollection.UpdateOneAsync(filter, update);
+        if (result.MatchedCount == 0)
+            throw new InvalidOperationException($"Cotação não encontrada.");
 
         return cotacao;
     }
 
     public async Task AddProdutoCotacao(string cotacaoId, string produtoId)
     {
-        var filter = Builders<Cotacao>.Filter.Eq("Id", cotacaoId);
+        var filter = Builders<Cotacao>.Filter.Eq(x => x.Id, cotacaoId);
 
-        var update = Builders<Cotacao>.Update.AddToSet("produtos", produtoId);
+        var update = Builders<Cotacao>.Update.AddToSet(x => x.Produtos, produtoId);
 
-        await _mongoCollection.UpdateOneAsync(filter, update);
+        var result = await _mongoCollection.UpdateOneAsync(filter, update);
+        if (result.MatchedCount == 0)
+            throw new InvalidOperationException($"Cotação não encontrada.");
     }
 
     public async Task RemoveProdutoCotacao(string cotacaoId, string produtoId)
     {
-        var filter = Builders<Cotacao>.Filter.Eq("Id", cotacaoId);
+        var filter = Builders<Cotacao>.Filter.Eq(x => x.Id, cotacaoId);
 
         var update = Builders<Cotacao>.Update.Pull("produtos", produtoId);
 
-        await _mongoCollection.UpdateOneAsync(filter, update);
+        var result = await _mongoCollection.UpdateOneAsync(filter, update);
+        if (result.MatchedCount == 0)
+            throw new InvalidOperationException($"Cotação não encontrada.");
     }
 
-    public async Task Delete(string id)
+    public async Task Delete(string cotacaoId)
     {
-        var filter = Builders<Cotacao>.Filter.Eq("Id", id);
-        await _mongoCollection.DeleteOneAsync(filter);
+        var filter = Builders<Cotacao>.Filter.Eq(x => x.Id, cotacaoId);
+        var result = await _mongoCollection.DeleteOneAsync(filter);
+        if (result.DeletedCount == 0)
+            throw new InvalidOperationException($"Cotação não encontrada.");
     }
 }

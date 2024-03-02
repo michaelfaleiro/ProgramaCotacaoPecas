@@ -15,19 +15,24 @@
     <ItemGroup>
         <None Remove="ProgramaCotacaoPecas.http"/>
         <None Remove="Data\DbSettings.cs\**"/>
-        <None Remove=".gitignore" />
+        <None Remove=".gitignore"/>
+        <None Remove="ViewsModels\CotacaoViewsModels\**"/>
     </ItemGroup>
 
     <ItemGroup>
         <Compile Remove="Data\DbSettings.cs\**"/>
+        <Compile Remove="ViewsModels\CotacaoComProdutosViewModel.cs"/>
+        <Compile Remove="ViewsModels\CotacaoViewsModels\**"/>
     </ItemGroup>
 
     <ItemGroup>
         <EmbeddedResource Remove="Data\DbSettings.cs\**"/>
+        <EmbeddedResource Remove="ViewsModels\CotacaoViewsModels\**"/>
     </ItemGroup>
 
     <ItemGroup>
         <Content Remove="Data\DbSettings.cs\**"/>
+        <Content Remove="ViewsModels\CotacaoViewsModels\**"/>
     </ItemGroup>
 
 </Project>

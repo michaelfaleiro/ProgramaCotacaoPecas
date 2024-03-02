@@ -37,10 +37,12 @@ public class ProdutoService
 
         var update = Builders<Produto>.Update
             .Set(x => x.NomeProduto, produto.NomeProduto)
-            .Set(x => x.Quantidade, produto.Quantidade);
-
+            .Set(x => x.Quantidade, produto.Quantidade)
+            .Set(x => x.UpdatedAt, DateTime.UtcNow);
 
         var result = await _mongoCollection.UpdateOneAsync(filter, update);
+        if (result.MatchedCount == 0)
+            throw new InvalidOperationException($"Produto não encontrado.");
 
         return produto;
     }
@@ -49,14 +51,18 @@ public class ProdutoService
     {
         var filter = Builders<Produto>.Filter.Eq("Id", produtoId);
 
-        var update = Builders<Produto>.Update.AddToSet<Preco>("precos", preco);
+        var update = Builders<Produto>.Update.AddToSet("precos", preco);
 
         var result = await _mongoCollection.UpdateOneAsync(filter, update);
+        if (result.MatchedCount == 0)
+            throw new InvalidOperationException($"Produto com Id {produtoId} não encontrado.");
     }
 
-    public async Task DeleteCotacao(string id)
+    public async Task Delete(string id)
     {
         var filter = Builders<Produto>.Filter.Eq("Id", id);
-        await _mongoCollection.DeleteOneAsync(filter);
+        var result = await _mongoCollection.DeleteOneAsync(filter);
+        if (result.DeletedCount == 0)
+            throw new InvalidOperationException($"Produto não encontrado.");
     }
 }
