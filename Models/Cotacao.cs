@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using ProgramaCotacaoPecas.Services;
+
 
 namespace ProgramaCotacaoPecas.Models;
 
@@ -14,9 +14,13 @@ public class Cotacao
 
     [Required(ErrorMessage = "Informe o Carro")]
     public string Carro { get; set; } = null!;
+    [MaxLength(7, ErrorMessage = "Máximo 7 caracteres")]
+    public string? Placa { get; set; }
 
     [MaxLength(17, ErrorMessage = "Máximo 17 caracteres")]
-    public string Chassi { get; set; } = null!;
+    public string? Chassi { get; set; }
+    public string? Observacao { get; set; }
+    public string Status { get; set; } = "Novo";
 
     [BsonElement("produtos")]
     [JsonPropertyName("produtos")]

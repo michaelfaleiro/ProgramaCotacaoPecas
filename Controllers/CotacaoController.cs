@@ -84,7 +84,7 @@ public class CotacaoController : ControllerBase
         }
         catch (InvalidOperationException ex)
         {
-            return BadRequest(ex.Message);
+            return BadRequest(new { error = ex.Message });
         }
         catch (MongoWriteException)
         {

@@ -2,7 +2,6 @@ using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using ProgramaCotacaoPecas.Data;
 using ProgramaCotacaoPecas.Models;
-using ProgramaCotacaoPecas.ViewsModels;
 
 namespace ProgramaCotacaoPecas.Services;
 
@@ -27,7 +26,6 @@ public class CotacaoService
         return await _mongoCollection.Find(_ => true).ToListAsync();
     }
 
-
     public async Task<Cotacao> GetById(string id)
     {
         return await _mongoCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
@@ -39,6 +37,9 @@ public class CotacaoService
 
         var update = Builders<Cotacao>.Update
             .Set(x => x.Carro, cotacao.Carro)
+            .Set(x => x.Placa, cotacao.Placa)
+            .Set(x => x.Observacao, cotacao.Observacao)
+            .Set(x => x.Status, cotacao.Status)
             .Set(x => x.Chassi, cotacao.Chassi)
             .Set(x => x.UpdatedAt, DateTime.UtcNow);
 
