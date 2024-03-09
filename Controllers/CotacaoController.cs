@@ -41,7 +41,7 @@ public class CotacaoController : ControllerBase
     {
         try
         {
-            var cotacao = await _cotacaoService.GetById(id);
+            var cotacao = await _cotacaoService.GetCotacaoWithProdutos(id);
 
             return Ok(cotacao);
         }
@@ -49,9 +49,9 @@ public class CotacaoController : ControllerBase
         {
             return StatusCode(500, "Erro ao Buscar Dados!");
         }
-        catch
+        catch (Exception ex)
         {
-            return StatusCode(500, "Falha interna no Servidor!");
+            return StatusCode(500, $"Falha interna no Servidor! {ex.Message}");
         }
     }
 

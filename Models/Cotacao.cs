@@ -6,6 +6,13 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace ProgramaCotacaoPecas.Models;
 
+public class ProdutoId
+{
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string? IdProduto { get; set; }
+}
+
 public class Cotacao
 {
     [BsonId]
@@ -14,17 +21,19 @@ public class Cotacao
 
     [Required(ErrorMessage = "Informe o Carro")]
     public string Carro { get; set; } = null!;
+
     [MaxLength(7, ErrorMessage = "Máximo 7 caracteres")]
     public string? Placa { get; set; }
 
     [MaxLength(17, ErrorMessage = "Máximo 17 caracteres")]
     public string? Chassi { get; set; }
+
     public string? Observacao { get; set; }
     public string Status { get; set; } = "Novo";
 
-    [BsonElement("produtos")]
-    [JsonPropertyName("produtos")]
-    public List<string>? Produtos { get; set; } = [];
+    [BsonElement("produtosId")]
+    [JsonPropertyName("produtosId")]
+    public List<ProdutoId>? ProdutosId { get; set; } = [];
 
     [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

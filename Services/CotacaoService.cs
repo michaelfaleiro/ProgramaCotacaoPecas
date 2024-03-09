@@ -1,7 +1,9 @@
 using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using ProgramaCotacaoPecas.Data;
 using ProgramaCotacaoPecas.Models;
+using ProgramaCotacaoPecas.ViewsModels;
 
 namespace ProgramaCotacaoPecas.Services;
 
@@ -16,6 +18,7 @@ public class CotacaoService
         _mongoCollection = database.GetCollection<Cotacao>(mongoDbSettings.Value.CollectionName["CotacaoCollection"]);
     }
 
+
     public async Task CreateAsync(Cotacao cotacao)
     {
         await _mongoCollection.InsertOneAsync(cotacao);
@@ -29,6 +32,24 @@ public class CotacaoService
     public async Task<Cotacao> GetById(string id)
     {
         return await _mongoCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+    }
+
+    public async Task<ListaProdutoViewModel> GetCotacaoWithProdutos(string id)
+    {
+        var pipeline = new BsonDocument[]
+        {
+            new BsonDocument("$lookup", new BsonDocument
+            {
+                { "from", "Produto" },
+                { "localField", "produtoId._id" },
+                { "foreignField", "_id" },
+                { "as", "listaProdutos" }
+            })
+        };
+
+        var cotacao = await _mongoCollection.Aggregate<ListaProdutoViewModel>(pipeline).FirstOrDefaultAsync();
+
+        return cotacao;
     }
 
     public async Task<Cotacao> Update(string cotacaoId, Cotacao cotacao)
@@ -54,7 +75,7 @@ public class CotacaoService
     {
         var filter = Builders<Cotacao>.Filter.Eq(x => x.Id, cotacaoId);
 
-        var update = Builders<Cotacao>.Update.AddToSet(x => x.Produtos, produtoId);
+        var update = Builders<Cotacao>.Update.AddToSet(x => x.ProdutosId, new ProdutoId { IdProduto = produtoId });
 
         var result = await _mongoCollection.UpdateOneAsync(filter, update);
         if (result.MatchedCount == 0)
