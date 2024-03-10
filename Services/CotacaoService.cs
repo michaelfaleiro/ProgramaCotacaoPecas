@@ -38,12 +38,20 @@ public class CotacaoService
     {
         var pipeline = new BsonDocument[]
         {
+            new BsonDocument("$match", new BsonDocument
+            {
+                { "_id", new ObjectId(id) }
+            }),
             new BsonDocument("$lookup", new BsonDocument
             {
                 { "from", "Produto" },
                 { "localField", "produtoId._id" },
                 { "foreignField", "_id" },
-                { "as", "listaProdutos" }
+                { "as", "Produtos" }
+            }),
+            new BsonDocument("$project", new BsonDocument
+            {
+                {"produtoId", 0}
             })
         };
 
@@ -75,7 +83,7 @@ public class CotacaoService
     {
         var filter = Builders<Cotacao>.Filter.Eq(x => x.Id, cotacaoId);
 
-        var update = Builders<Cotacao>.Update.AddToSet(x => x.ProdutosId, new ProdutoId { IdProduto = produtoId });
+        var update = Builders<Cotacao>.Update.AddToSet(x => x.ProdutoId, new ProdutoId { IdProduto = produtoId });
 
         var result = await _mongoCollection.UpdateOneAsync(filter, update);
         if (result.MatchedCount == 0)

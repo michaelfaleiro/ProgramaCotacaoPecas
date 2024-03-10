@@ -3,15 +3,7 @@ using System.Text.Json.Serialization;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-
 namespace ProgramaCotacaoPecas.Models;
-
-public class ProdutoId
-{
-    [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string? IdProduto { get; set; }
-}
 
 public class Cotacao
 {
@@ -31,13 +23,20 @@ public class Cotacao
     public string? Observacao { get; set; }
     public string Status { get; set; } = "Novo";
 
-    [BsonElement("produtosId")]
-    [JsonPropertyName("produtosId")]
-    public List<ProdutoId>? ProdutosId { get; set; } = [];
+    [BsonElement("produtoId")]
+    [JsonPropertyName("produtoId")]
+    public List<ProdutoId>? ProdutoId { get; set; } = [];
 
     [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+}
+
+public class ProdutoId
+{
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string? IdProduto { get; set; }
 }

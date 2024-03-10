@@ -18,13 +18,9 @@ public class ListaProdutoViewModel
     public string Observacao { get; set; }
     public string Status { get; set; }
 
-    [BsonElement("produtoId")]
-    [JsonPropertyName("produtoId")]
-    public List<ProdutoId> ProdutoId { get; set; }
-
-    [BsonElement("listaProdutos")]
-    [JsonPropertyName("listaProdutos")]
-    public List<Produto> ListaProdutos { get; set; }
+    [BsonElement("Produtos")]
+    [JsonPropertyName("Produtos")]
+    public List<Produto> Produtos { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;

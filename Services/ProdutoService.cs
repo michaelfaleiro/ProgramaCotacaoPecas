@@ -36,7 +36,7 @@ public class ProdutoService
         var filter = Builders<Produto>.Filter.Eq("Id", id);
 
         var update = Builders<Produto>.Update
-            .Set(x => x.NomeProduto, produto.NomeProduto)
+            .Set(x => x.Nome, produto.Nome)
             .Set(x => x.Quantidade, produto.Quantidade)
             .Set(x => x.UpdatedAt, DateTime.UtcNow);
 

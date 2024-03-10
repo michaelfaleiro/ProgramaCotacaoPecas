@@ -11,7 +11,7 @@ public class Produto
     [BsonRepresentation(BsonType.ObjectId)]
     public string? Id { get; set; }
 
-    public string NomeProduto { get; set; } = null!;
+    public string Nome { get; set; } = null!;
     public int Quantidade { get; set; }
 
     [BsonElement("precos")]
