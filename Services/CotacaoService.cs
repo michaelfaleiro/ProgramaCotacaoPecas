@@ -38,18 +38,18 @@ public class CotacaoService
     {
         var pipeline = new BsonDocument[]
         {
-            new BsonDocument("$match", new BsonDocument
+            new("$match", new BsonDocument
             {
                 { "_id", new ObjectId(id) }
             }),
-            new BsonDocument("$lookup", new BsonDocument
+            new("$lookup", new BsonDocument
             {
                 { "from", "Produto" },
                 { "localField", "produtoId._id" },
                 { "foreignField", "_id" },
                 { "as", "Produtos" }
             }),
-            new BsonDocument("$project", new BsonDocument
+            new("$project", new BsonDocument
             {
                 {"produtoId", 0}
             })
