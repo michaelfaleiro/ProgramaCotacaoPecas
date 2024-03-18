@@ -16,6 +16,7 @@ public class Preco
     public string Sku { get; set; } = null!;
     public string Marca { get; set; } = null!;
     public double PrecoCusto { get; set; }
+    public double PrecoVenda { get; set; }
     public int QuantidadeAtendida { get; set; }
 
     [BsonDateTimeOptions(Kind = DateTimeKind.Local)]

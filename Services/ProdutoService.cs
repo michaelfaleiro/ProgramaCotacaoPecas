@@ -37,7 +37,9 @@ public class ProdutoService
 
         var update = Builders<Produto>.Update
             .Set(x => x.Nome, produto.Nome)
+            .Set(x => x.Sku, produto.Sku)
             .Set(x => x.Quantidade, produto.Quantidade)
+            .Set(x => x.Observacao, produto.Observacao)
             .Set(x => x.UpdatedAt, DateTime.UtcNow);
 
         var result = await _mongoCollection.UpdateOneAsync(filter, update);
