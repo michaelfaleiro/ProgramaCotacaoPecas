@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using ProgramaCotacaoPecas.Models;
 using ProgramaCotacaoPecas.Services;
@@ -76,6 +77,7 @@ public class ProdutoController : ControllerBase
     [HttpPost("{produtoId:length(24)}/addpreco")]
     public async Task<IActionResult> AddPrecoProduto([FromBody] Preco model, string produtoId)
     {
+        model.Id = ObjectId.GenerateNewId().ToString();
         try
         {
             await _produtoService.AddPrecoProduto(produtoId, model);
@@ -89,6 +91,52 @@ public class ProdutoController : ControllerBase
         catch (MongoWriteException)
         {
             return StatusCode(500, "Erro ao Salvar Dados!");
+        }
+        catch
+        {
+            return StatusCode(500, "Falha interna no Servidor!");
+        }
+    }
+
+    [HttpPut("{produtoId:length(24)}/updatepreco")]
+    public async Task<IActionResult> UpdatePrecoProduto([FromBody] Preco model, string produtoId)
+    {
+        try
+        {
+            await _produtoService.UpdatePrecoProduto(produtoId, model);
+
+            return Ok();
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (MongoWriteException)
+        {
+            return StatusCode(500, "Erro ao Atualizar Dados!");
+        }
+        catch
+        {
+            return StatusCode(500, "Falha interna no Servidor!");
+        }
+    }
+
+    [HttpDelete("{produtoId:length(24)}/removepreco/{precoId:length(24)}")]
+    public async Task<IActionResult> RemovePrecoProduto(string produtoId, string precoId)
+    {
+        try
+        {
+            await _produtoService.RemovePrecoProduto(produtoId, precoId);
+
+            return Ok();
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        catch (MongoWriteException)
+        {
+            return StatusCode(500, "Erro ao Remover Dados!");
         }
         catch
         {
